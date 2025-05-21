@@ -75,6 +75,8 @@ export default function Gallery({ media }: GalleryProps) {
               {item.type === 'image' ? (
                 <img
                   src={item.url}
+                  alt={`Gallery image ${idx + 1}`}
+                  referrerPolicy="no-referrer"
                   loading="lazy"
                   onLoad={() =>
                     setLoaded((prev) => {
