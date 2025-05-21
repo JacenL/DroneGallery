@@ -4,14 +4,14 @@ import Gallery from '@/components/gallery';
 export default function HomePage() {
 
   const media = [
-    { type: 'image' as const, url: 'https://i.imgur.com/jbAmy0L.jpeg' },
-    { type: 'image' as const, url: 'https://i.imgur.com/lHQEVMh.jpeg' },
-    { type: 'image' as const, url: 'https://i.imgur.com/cTidLNA.jpeg' },
-    { type: 'image' as const, url: 'https://i.imgur.com/0THRgU7.jpeg' },
-    { type: 'image' as const, url: 'https://i.imgur.com/sHSKXY1.jpeg' },
-    { type: 'image' as const, url: 'https://i.imgur.com/PVsegxW.jpeg' },
-    { type: 'image' as const, url: 'https://i.imgur.com/zQEUvXA.jpeg' },
-    { type: 'image' as const, url: 'https://i.imgur.com/GAd29Rz.jpeg' },
+    { type: 'image' as const, url: 'https://res.cloudinary.com/jaycenl/image/upload/v1747802603/DJI_0070_o3dp2k.jpg' },
+    { type: 'image' as const, url: 'https://res.cloudinary.com/jaycenl/image/upload/v1747802565/DJI_0133_qhhcgw.jpg' },
+    { type: 'image' as const, url: 'https://res.cloudinary.com/jaycenl/image/upload/v1747802565/DJI_0133_qhhcgw.jpg' },
+    { type: 'image' as const, url: 'https://res.cloudinary.com/jaycenl/image/upload/v1747802547/DJI_0055_sdebj7.jpg' },
+    { type: 'image' as const, url: 'https://res.cloudinary.com/jaycenl/image/upload/v1747802514/DJI_0060_hoctlo.jpg' },
+    { type: 'image' as const, url: 'https://res.cloudinary.com/jaycenl/image/upload/v1747802502/DJI_0038_rsjj4b.jpg' },
+    { type: 'image' as const, url: 'https://res.cloudinary.com/jaycenl/image/upload/v1747802644/dji_export_20240816_190215_1723849335869_sphere_screenshot_qdmseq.jpg' },
+    { type: 'image' as const, url: 'https://res.cloudinary.com/jaycenl/image/upload/v1747802452/DJI_0121_edit_symozo.jpg' },
     
 
     { type: 'video' as const, url: 'https://www.youtube.com/embed/retUjL3BJoo' },
