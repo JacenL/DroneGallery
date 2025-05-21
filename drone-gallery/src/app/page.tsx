@@ -2,7 +2,6 @@
 import Gallery from '@/components/gallery';
 
 export default function HomePage() {
-  const images = ['img1.jpg', 'img2.jpg', 'img3.jpg'];
 
   const media = [
     { type: 'image' as const, url: 'https://i.imgur.com/jbAmy0L.jpeg' },
