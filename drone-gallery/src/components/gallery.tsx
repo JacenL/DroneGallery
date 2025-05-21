@@ -85,7 +85,7 @@ export default function Gallery({ media }: GalleryProps) {
                       return updated;
                     })
                   }
-                  className={`w-full h-full object-cover transition-opacity duration-700 ${loaded[idx] ? 'opacity-100' : 'opacity-0'} group-hover:scale-105 group-hover:brightness-90`}
+                  className={`w-full h-full object-cover transition-opacity duration-700 ${loaded[idx] ? 'opacity-100' : 'opacity-100 sm:opacity-0'} group-hover:scale-105 group-hover:brightness-90`}
                 />
               ) : (
                 <iframe
