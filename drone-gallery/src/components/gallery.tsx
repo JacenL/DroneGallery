@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Image from 'next/image';
 
 type MediaItem = {
   type: 'image' | 'video';
@@ -34,7 +35,13 @@ export default function Gallery({ media }: GalleryProps) {
         >
           <div className="w-[90vw] h-[80vh] max-w-screen-xl transform transition duration-300 scale-95 opacity-0 animate-modal">
             {selected.type === 'image' ? (
-              <img src={selected.url} alt="Expanded" className="w-full h-full object-contain" />
+              <Image
+                src={selected.url}
+                alt="Expanded"
+                fill
+                className="object-contain"
+                unoptimized
+              />
             ) : (
               <iframe
                 src={selected.url}
@@ -73,20 +80,25 @@ export default function Gallery({ media }: GalleryProps) {
               className="cursor-pointer relative overflow-hidden rounded-xl shadow group aspect-[4/3] bg-white"
             >
               {item.type === 'image' ? (
-                <img
-                  src={item.url}
-                  alt={`Gallery image ${idx + 1}`}
-                  referrerPolicy="no-referrer"
-                  loading="lazy"
-                  onLoad={() =>
-                    setLoaded((prev) => {
-                      const updated = [...prev];
-                      updated[idx] = true;
-                      return updated;
-                    })
-                  }
-                  className={`w-full h-full object-cover transition-opacity duration-700 ${loaded[idx] ? 'opacity-100' : 'opacity-100 sm:opacity-0'} group-hover:scale-105 group-hover:brightness-90`}
-                />
+                <div className="relative w-full h-full">
+                  <Image
+                    src={item.url}
+                    alt={`Gallery image ${idx + 1}`}
+                    fill
+                    sizes="(max-width: 768px) 100vw, 33vw"
+                    className={`object-cover transition-opacity duration-700 ${
+                      loaded[idx] ? 'opacity-100' : 'opacity-100 sm:opacity-0'
+                    } group-hover:scale-105 group-hover:brightness-90`}
+                    onLoad={() =>
+                      setLoaded((prev) => {
+                        const updated = [...prev];
+                        updated[idx] = true;
+                        return updated;
+                      })
+                    }
+                    unoptimized
+                  />
+                </div>
               ) : (
                 <iframe
                   src={`${item.url}?rel=0&modestbranding=1&showinfo=0`}
