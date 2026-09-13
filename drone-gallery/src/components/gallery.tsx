@@ -1,118 +1,136 @@
 'use client';
 
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import Image from 'next/image';
-
-type MediaItem = {
-  type: 'image' | 'video';
-  url: string;
-};
+import Lightbox from '@/components/lightbox';
+import Reveal from '@/components/reveal';
+import { PlayIcon } from '@/components/icons';
+import { type MediaItem, thumbUrl, youtubeThumbs } from '@/components/media';
 
 type GalleryProps = {
   media: MediaItem[];
 };
 
-const TABS = ['All', 'Photos', 'Videos'] as const;
-type Tab = (typeof TABS)[number];
-
 export default function Gallery({ media }: GalleryProps) {
-  const [activeTab, setActiveTab] = useState<Tab>('All');
-  const [loaded, setLoaded] = useState<boolean[]>(Array(media.length).fill(false));
-  const [selected, setSelected] = useState<MediaItem | null>(null);
-
-  const filteredMedia = media.filter((item) => {
-    if (activeTab === 'All') return true;
-    if (activeTab === 'Photos') return item.type === 'image';
-    if (activeTab === 'Videos') return item.type === 'video';
-  });
+  const photos = useMemo(() => media.filter((item) => item.type === 'image'), [media]);
+  const videos = useMemo(() => media.filter((item) => item.type === 'video'), [media]);
 
   return (
-    <>
-      {selected && (
+    <div className="relative z-10 mx-auto w-full max-w-6xl space-y-14 px-5 sm:px-8">
+      <MediaBlock id="photos" title="Photos" items={photos} columns="photos" />
+      <MediaBlock id="videos" title="Videos" items={videos} columns="videos" />
+    </div>
+  );
+}
+
+type BlockProps = {
+  id: string;
+  title: string;
+  items: MediaItem[];
+  columns: 'photos' | 'videos';
+};
+
+function MediaBlock({ id, title, items, columns }: BlockProps) {
+  const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
+
+  return (
+    <section id={id}>
+      <Reveal className="mb-4 flex items-end justify-between gap-4">
+        <h2 className="text-lg font-medium">{title}</h2>
+        <p className="text-sm text-muted tabular-nums">{items.length}</p>
+      </Reveal>
+
+      {items.length === 0 ? (
+        <p className="py-16 text-muted">Nothing here yet.</p>
+      ) : (
         <div
-          className="fixed inset-0 backdrop-blur-xs bg-blue-100/70 flex items-center justify-center z-50"
-          onClick={() => setSelected(null)}
+          className={
+            columns === 'photos'
+              ? 'grid grid-cols-2 gap-1.5 lg:grid-cols-3'
+              : 'grid grid-cols-1 gap-1.5 sm:grid-cols-2'
+          }
         >
-          <div className="w-[90vw] h-[80vh] max-w-screen-xl transform transition duration-300 scale-95 opacity-0 animate-modal">
-            {selected.type === 'image' ? (
-              <Image
-                src={selected.url}
-                alt="Expanded"
-                fill
-                className="object-contain"
-                unoptimized
-              />
-            ) : (
-              <iframe
-                src={selected.url}
-                allow="autoplay; fullscreen"
-                allowFullScreen
-                className={`w-full h-full object-contain rounded-lg shadow-lg`}
-              />
-            )}
-          </div>
+          {items.map((item, idx) => (
+            <Reveal key={item.url} delay={Math.min(idx, 8) * 40}>
+              <Tile item={item} index={idx} onOpen={() => setSelectedIndex(idx)} />
+            </Reveal>
+          ))}
         </div>
       )}
 
-      <div className="w-full max-w-7xl mx-auto">
+      {selectedIndex !== null ? (
+        <Lightbox
+          items={items}
+          index={selectedIndex}
+          onClose={() => setSelectedIndex(null)}
+          onNavigate={setSelectedIndex}
+        />
+      ) : null}
+    </section>
+  );
+}
 
-        <div className="flex justify-center gap-4 mb-8">
-          {TABS.map((tab) => (
-            <button
-              key={tab}
-              onClick={() => setActiveTab(tab)}
-              className={`px-4 py-2 rounded-full font-medium transition ${activeTab === tab
-                ? 'bg-blue-700 text-white shadow-md'
-                : 'bg-white text-blue-700 hover:bg-blue-200'
-                }`}
-            >
-              {tab}
-            </button>
-          ))}
-        </div>
+type TileProps = {
+  item: MediaItem;
+  index: number;
+  onOpen: () => void;
+};
 
+function Tile({ item, index, onOpen }: TileProps) {
+  const [loaded, setLoaded] = useState(false);
+  const [thumbIdx, setThumbIdx] = useState(0);
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-          {filteredMedia.map((item, idx) => (
-            <div
-              key={idx}
-              onClick={() => setSelected(item)}
-              className="cursor-pointer relative overflow-hidden rounded-xl shadow group aspect-[4/3] bg-white"
-            >
-              {item.type === 'image' ? (
-                <div className="relative w-full h-full">
-                  <Image
-                    src={item.url}
-                    alt={`Gallery image ${idx + 1}`}
-                    fill
-                    sizes="(max-width: 768px) 100vw, 33vw"
-                    className={`object-cover transition-opacity duration-700 ${
-                      loaded[idx] ? 'opacity-100' : 'opacity-100 sm:opacity-0'
-                    } group-hover:scale-105 group-hover:brightness-90`}
-                    onLoad={() =>
-                      setLoaded((prev) => {
-                        const updated = [...prev];
-                        updated[idx] = true;
-                        return updated;
-                      })
-                    }
-                    unoptimized
-                  />
-                </div>
-              ) : (
-                <iframe
-                  src={`${item.url}?rel=0&modestbranding=1&showinfo=0`}
-                  allow="autoplay; fullscreen"
-                  allowFullScreen
-                  className="w-full h-full rounded-xl shadow-md object-cover"
-                  loading="lazy"
-                  title={`Video ${idx + 1}`}
-                />
-              )}
-            </div>
-          ))}
-        </div>
-      </div>
-    </>
+  const isVideo = item.type === 'video';
+  const thumbs = isVideo ? youtubeThumbs(item.url) : [thumbUrl(item.url, 1200)];
+  const src = thumbs[Math.min(thumbIdx, thumbs.length - 1)];
+
+  return (
+    <button
+      type="button"
+      onClick={onOpen}
+      className="group relative block w-full overflow-hidden bg-card text-left"
+      aria-label={`${isVideo ? 'Play video' : 'View photo'} ${index + 1}`}
+    >
+      <span className={`relative block overflow-hidden bg-card ${isVideo ? 'aspect-video' : 'aspect-[4/3]'}`}>
+        {!loaded ? <span className="skeleton absolute inset-0" aria-hidden /> : null}
+
+        {src ? (
+          <Image
+            src={src}
+            alt={isVideo ? `Video thumbnail ${index + 1}` : `Drone photo ${index + 1}`}
+            fill
+            sizes={
+              isVideo
+                ? '(max-width: 640px) 100vw, 50vw'
+                : '(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw'
+            }
+            unoptimized
+            onLoad={(e) => {
+              const img = e.currentTarget;
+              if (isVideo && img.naturalWidth <= 120 && thumbIdx < thumbs.length - 1) {
+                setThumbIdx((i) => i + 1);
+                return;
+              }
+              setLoaded(true);
+            }}
+            onError={() => {
+              if (thumbIdx < thumbs.length - 1) setThumbIdx((i) => i + 1);
+              else setLoaded(true);
+            }}
+            className={`object-cover transition duration-500 group-hover:scale-[1.04] ${
+              loaded ? 'opacity-100' : 'opacity-0'
+            }`}
+          />
+        ) : null}
+
+        {isVideo ? (
+          <span className="pointer-events-none absolute inset-0 grid place-items-center bg-black/15">
+            <span className="grid size-11 place-items-center bg-black/45 text-white backdrop-blur-sm">
+              <PlayIcon className="ml-0.5 size-5" />
+            </span>
+          </span>
+        ) : null}
+      </span>
+    </button>
   );
 }

@@ -1,45 +1,538 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+@custom-variant dark (&:where(.dark, .dark *));
 
 :root {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --bg: #f3f1ec;
+  --fg: #1a1a1a;
+  --muted: #5c5c5c;
+  --card: #ffffff;
+  --line: rgb(26 26 26 / 0.14);
+  --inverse: #1a1a1a;
+  --on-inverse: #f3f1ec;
+  --accent: #3d5a46;
+  --glow: rgb(255 210 130 / 0.2);
+  --warm: rgb(196 149 92 / 0.14);
+  --skeleton-a: #e4e0d6;
+  --skeleton-b: #f3f1ec;
+  --shadow: 0 8px 24px -12px rgb(26 26 26 / 0.35);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+.dark {
+  --bg: #111111;
+  --fg: #ececec;
+  --muted: #9a9a9a;
+  --card: #1a1a1a;
+  --line: rgb(255 255 255 / 0.12);
+  --inverse: #ececec;
+  --on-inverse: #111111;
+  --accent: #8aa38e;
+  --glow: rgb(158 201 232 / 0.08);
+  --warm: rgb(196 165 116 / 0.06);
+  --skeleton-a: #222;
+  --skeleton-b: #1a1a1a;
+  --shadow: 0 10px 28px -14px rgb(0 0 0 / 0.7);
 }
 
-body {
-  background-color: #ebf8ff;
-  color: #1a202c;
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
-}
+@theme inline {
+  --font-sans: var(--font-plex), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-plex-mono), ui-monospace, monospace;
+  --font-display: var(--font-plex), ui-sans-serif, system-ui, sans-serif;
 
-@layer utilities {
-  @keyframes modal-in {
-    0% {
-      transform: scale(0.95);
+  --color-bg: var(--bg);
+  --color-fg: var(--fg);
+  --color-muted: var(--muted);
+  --color-card: var(--card);
+  --color-line: var(--line);
+  --color-inverse: var(--inverse);
+  --color-on-inverse: var(--on-inverse);
+  --color-accent: var(--accent);
+  --color-ink-950: var(--fg);
+  --color-ink-900: var(--fg);
+  --color-ink-800: var(--fg);
+  --color-ink-400: var(--muted);
+  --color-ink-300: var(--muted);
+  --color-ink-100: var(--fg);
+  --color-paper: var(--bg);
+  --color-sky: var(--accent);
+  --color-sky-glow: var(--accent);
+  --color-horizon: #c4a574;
+
+  --animate-fade-in: fade-in 0.25s ease-out both;
+  --animate-fade-up: fade-up 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+  --animate-slide-right: slide-right 0.42s cubic-bezier(0.22, 1, 0.36, 1) both;
+  --animate-slide-left: slide-left 0.42s cubic-bezier(0.22, 1, 0.36, 1) both;
+  --animate-shimmer: shimmer 1.6s linear infinite;
+  --animate-float: float 3.2s ease-in-out infinite;
+  --animate-float-slow: float-slow 5s ease-in-out infinite;
+  --animate-cloud-drift: cloud-drift 18s ease-in-out infinite;
+  --animate-twinkle: twinkle 3.4s ease-in-out infinite;
+
+  @keyframes fade-in {
+    from {
       opacity: 0;
     }
-
-    100% {
-      transform: scale(1);
+    to {
       opacity: 1;
     }
   }
 
-  .animate-modal {
-    animation: modal-in 0.6s ease-out forwards;
+  @keyframes fade-up {
+    from {
+      opacity: 0;
+      transform: translateY(16px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  @keyframes float {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-6px);
+    }
+  }
+
+  @keyframes float-slow {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(8px);
+    }
+  }
+
+  @keyframes cloud-drift {
+    0%,
+    100% {
+      transform: translateX(0);
+    }
+    50% {
+      transform: translateX(18px);
+    }
+  }
+
+  @keyframes slide-right {
+    from {
+      opacity: 0;
+      transform: translateX(24px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  @keyframes slide-left {
+    from {
+      opacity: 0;
+      transform: translateX(-24px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  @keyframes shimmer {
+    from {
+      background-position: -200% 0;
+    }
+    to {
+      background-position: 200% 0;
+    }
+  }
+
+  @keyframes twinkle {
+    0%,
+    100% {
+      opacity: 0.25;
+    }
+    50% {
+      opacity: 1;
+    }
+  }
+}
+
+html {
+  color-scheme: light;
+  scroll-behavior: smooth;
+}
+
+html.dark {
+  color-scheme: dark;
+}
+
+body {
+  background-color: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  min-height: 100dvh;
+}
+
+::selection {
+  background: color-mix(in oklab, var(--accent) 35%, transparent);
+  color: var(--fg);
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--muted) transparent;
+}
+
+:focus-visible {
+  outline: 2px solid var(--fg);
+  outline-offset: 2px;
+}
+
+@utility font-display {
+  font-family: var(--font-display);
+}
+
+@utility bg-page {
+  background: var(--bg);
+}
+
+@utility skeleton {
+  background: linear-gradient(100deg, var(--skeleton-a) 30%, var(--skeleton-b) 50%, var(--skeleton-a) 70%);
+  background-size: 200% 100%;
+  animation: var(--animate-shimmer);
+}
+
+@utility no-scrollbar {
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.reveal-off {
+  opacity: 0;
+  transform: translateY(28px);
+}
+
+.reveal-on {
+  opacity: 1;
+  transform: none;
+  transition:
+    opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.parallax-hero {
+  transform: translate3d(0, calc(var(--scroll, 0) * 0.22px), 0) scale(1.12);
+  will-change: transform;
+}
+
+.parallax-copy {
+  transform: translate3d(0, calc(var(--scroll, 0) * -0.06px), 0);
+  will-change: transform;
+}
+
+.film-track {
+  transform: translate3d(calc(10vw - var(--scroll, 0) * 0.14px), 0, 0);
+  will-change: transform;
+}
+
+.constellation-sky {
+  transform: translate3d(0, calc(var(--scroll-p, 0) * 10vh), 0) rotate(calc(var(--scroll-p, 0) * 5deg))
+    scale(calc(1.1 + var(--scroll-p, 0) * 0.16));
+  transform-origin: 50% 24%;
+  will-change: transform;
+}
+
+.day-sky {
+  transform: rotate(calc(var(--scroll-p, 0) * -7deg)) scale(1.14);
+  transform-origin: 50% 30%;
+  will-change: transform;
+}
+
+.pin-scene {
+  height: 220vh;
+  --pin: 0;
+}
+
+.pin-sticky {
+  position: sticky;
+  top: 0;
+  height: 100dvh;
+  overflow: hidden;
+  background: var(--bg);
+}
+
+.pin-frame {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  transform: scale(calc(0.76 + var(--pin, 0) * 0.24));
+  transform-origin: center;
+  will-change: transform;
+}
+
+.pin-veil {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgb(0 0 0 / 0.62), rgb(0 0 0 / 0.08) 55%, transparent);
+  opacity: calc(0.25 + var(--pin, 0) * 0.75);
+}
+
+.pin-copy {
+  position: absolute;
+  left: 1.25rem;
+  right: 1.25rem;
+  bottom: 2.5rem;
+  max-width: 42rem;
+  opacity: clamp(0, calc((var(--pin, 0) - 0.18) / 0.28), 1);
+  transform: translate3d(0, calc((1 - var(--pin, 0)) * 20px), 0);
+  filter: blur(calc((1 - var(--pin, 0)) * 3px));
+}
+
+@media (min-width: 640px) {
+  .pin-copy {
+    left: 2.5rem;
+    bottom: 3.5rem;
+  }
+}
+
+.sky-haze {
+  transform: translate3d(0, calc(var(--scroll-p, 0) * 8vh), 0);
+  opacity: calc(1 - var(--scroll-p, 0) * 0.9);
+  will-change: transform, opacity;
+}
+
+.sky-dawn {
+  opacity: var(--scroll-p, 0);
+  background:
+    radial-gradient(ellipse 80% 58% at 88% 92%, rgb(255 150 55 / 0.78) 0%, transparent 58%),
+    radial-gradient(ellipse 110% 48% at 42% 100%, rgb(255 92 78 / 0.42) 0%, transparent 54%),
+    linear-gradient(
+      180deg,
+      rgb(92 142 210 / 0.38) 0%,
+      rgb(255 168 148 / 0.52) 28%,
+      rgb(255 132 72 / 0.7) 64%,
+      rgb(255 186 96 / 0.62) 100%
+    );
+}
+
+.sky-horizon {
+  opacity: var(--scroll-p, 0);
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    rgb(255 170 120 / 0.18) 36%,
+    rgb(255 118 58 / 0.55) 78%,
+    rgb(255 196 110 / 0.42) 100%
+  );
+}
+
+.sky-sun {
+  z-index: 1;
+  right: calc(7% - var(--scroll-p, 0) * 1.5%);
+  top: calc(2.5rem + var(--scroll-p, 0) * (100dvh - 18.5rem));
+}
+
+.sky-ocean {
+  z-index: 2;
+  color: color-mix(in oklab, #5e7d8a, #c46a40 calc(var(--scroll-p, 0) * 48%));
+}
+
+.sky-sun-day {
+  opacity: calc(1 - var(--scroll-p, 0));
+}
+
+.sky-sun-rise {
+  opacity: var(--scroll-p, 0);
+}
+
+@media (min-width: 640px) {
+  .sky-sun {
+    right: calc(11% - var(--scroll-p, 0) * 2%);
+    top: calc(3.5rem + var(--scroll-p, 0) * (100dvh - 21.5rem));
+  }
+}
+
+.sky-birds {
+  transform: translate3d(calc(var(--scroll-p, 0) * 10vw), calc(var(--scroll-p, 0) * 8vh), 0);
+  will-change: transform;
+}
+
+.sky-flock {
+  z-index: 3;
+  opacity: calc(0.22 + var(--scroll-p, 0) * 0.78);
+}
+
+.sky-cloud-far {
+  opacity: calc(1 - var(--scroll-p, 0) * 0.4);
+  transform: translate3d(calc(var(--scroll-p, 0) * -12vw), calc(var(--scroll-p, 0) * 10vh), 0);
+  will-change: transform;
+}
+
+.sky-cloud-mid {
+  opacity: calc(1 - var(--scroll-p, 0) * 0.5);
+  transform: translate3d(calc(var(--scroll-p, 0) * 14vw), calc(var(--scroll-p, 0) * 16vh), 0);
+  will-change: transform;
+}
+
+.sky-cloud-near {
+  opacity: calc(1 - var(--scroll-p, 0) * 0.55);
+  transform: translate3d(calc(var(--scroll-p, 0) * -18vw), calc(var(--scroll-p, 0) * 24vh), 0);
+  will-change: transform;
+}
+
+.star-twinkle {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: star-twinkle 3.2s ease-in-out infinite;
+}
+
+@keyframes star-twinkle {
+  0%,
+  100% {
+    opacity: 0.18;
+    transform: scale(0.85);
+  }
+  45% {
+    opacity: 1;
+    transform: scale(1.35);
+  }
+  70% {
+    opacity: 0.4;
+    transform: scale(1);
+  }
+}
+
+.ocean-wave {
+  animation: ocean-drift 16s linear infinite;
+}
+
+.ocean-wave-alt {
+  animation: ocean-drift-rev 20s linear infinite;
+}
+
+@keyframes ocean-drift {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes ocean-drift-rev {
+  from {
+    transform: translateX(-50%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+.bird-shift {
+  animation: bird-shift 8s ease-in-out infinite;
+}
+
+@keyframes bird-shift {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+  35% {
+    transform: translate3d(12px, -7px, 0);
+  }
+  68% {
+    transform: translate3d(-8px, 5px, 0);
+  }
+}
+
+.cloud-across {
+  animation: cloud-across 90s linear infinite;
+  will-change: transform;
+}
+
+.cloud-across-rev {
+  animation: cloud-across-rev 110s linear infinite;
+  will-change: transform;
+}
+
+.cloud-across-near {
+  animation: cloud-across 70s linear infinite;
+  will-change: transform;
+}
+
+@keyframes cloud-across {
+  from {
+    transform: translateX(-25vw);
+  }
+  to {
+    transform: translateX(110vw);
+  }
+}
+
+@keyframes cloud-across-rev {
+  from {
+    transform: translateX(40vw);
+  }
+  to {
+    transform: translateX(-90vw);
+  }
+}
+
+@media (max-width: 640px) {
+  .film-track {
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .reveal-off,
+  .parallax-hero,
+  .parallax-copy,
+  .film-track,
+  .constellation-sky,
+  .day-sky,
+  .pin-frame,
+  .pin-copy,
+  .sky-haze,
+  .sky-sun,
+  .sky-birds,
+  .sky-cloud-far,
+  .sky-cloud-mid,
+  .sky-cloud-near,
+  .bird-shift,
+  .cloud-across,
+  .cloud-across-rev,
+  .cloud-across-near,
+  .ocean-wave,
+  .ocean-wave-alt {
+    transform: none !important;
+  }
+
+  .star-twinkle,
+  .bird-shift,
+  .cloud-across,
+  .cloud-across-rev,
+  .cloud-across-near,
+  .ocean-wave,
+  .ocean-wave-alt {
+    animation: none !important;
+  }
+
+  .reveal-off {
+    opacity: 1;
   }
 }

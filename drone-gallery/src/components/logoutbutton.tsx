@@ -1,22 +1,33 @@
 'use client';
+import { useState } from 'react';
 import { signOut } from 'firebase/auth';
 import { auth } from '@/utils/firebase';
 import { useRouter } from 'next/navigation';
+import { SpinnerIcon } from '@/components/icons';
 
 export default function LogoutButton() {
   const router = useRouter();
+  const [pending, setPending] = useState(false);
 
   const handleLogout = async () => {
-    await signOut(auth);
-    router.push('/login');
+    setPending(true);
+    try {
+      await signOut(auth);
+      router.push('/login');
+    } finally {
+      setPending(false);
+    }
   };
 
   return (
     <button
+      type="button"
       onClick={handleLogout}
-      className="px-4 py-2 rounded-2xl bg-blue-300 text-gray-800 font-medium shadow-sm hover:bg-blue-400 hover:shadow-md transition duration-200"
+      disabled={pending}
+      className="inline-flex items-center gap-2 text-sm text-muted hover:text-fg disabled:opacity-60"
     >
-      Log Out
+      {pending ? <SpinnerIcon className="size-3.5" /> : null}
+      Log out
     </button>
   );
 }
