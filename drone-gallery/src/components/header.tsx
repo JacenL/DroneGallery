@@ -37,12 +37,12 @@ export default function Header({ overlay = false }: HeaderProps) {
         </Link>
 
         <nav className="flex items-center gap-4 text-sm">
-          <a
+          <Link
             href="/#photos"
             className={`hidden sm:inline ${light ? 'text-white/75 hover:text-white' : 'text-muted hover:text-fg'}`}
           >
             Gallery
-          </a>
+          </Link>
           <ThemeToggle />
           {name ? (
             <>
