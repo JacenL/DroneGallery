@@ -34,7 +34,7 @@ export default function Hero() {
       <div className="absolute inset-x-0 bottom-0 z-10 px-5 pb-10 sm:px-8 sm:pb-14">
         <div className="mx-auto max-w-6xl">
           <h1 className="max-w-xl text-4xl font-medium tracking-tight text-white sm:text-6xl animate-fade-up">
-            A bird's eye view
+            {"A bird's eye view"}
           </h1>
           <p
             className="mt-4 max-w-md text-[15px] leading-6 text-white/80 animate-fade-up"
