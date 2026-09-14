@@ -62,8 +62,7 @@ export default function PinShot() {
               After sunset
             </h2>
             <p className="mt-3 max-w-md text-[15px] leading-6 text-white/80">
-              A neighborhood settling in for the night, photographed from a DJI as the last
-              color left the sky.
+              North Potomac, MD
             </p>
           </div>
         </div>

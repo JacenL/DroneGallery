@@ -8,7 +8,7 @@ export default function Filmstrip() {
   return (
     <section id="slides" className="relative z-10 overflow-hidden pt-[28vh] pb-16 sm:pt-[34vh] sm:pb-20">
       <Reveal className="mx-auto mb-4 max-w-6xl px-5 sm:px-8">
-        <h2 className="text-lg font-medium">A few I like</h2>
+        <h2 className="text-lg font-medium">Favorites</h2>
       </Reveal>
 
       <div className="no-scrollbar overflow-x-auto sm:overflow-visible">

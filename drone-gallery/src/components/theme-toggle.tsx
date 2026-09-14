@@ -13,10 +13,10 @@ export default function ThemeToggle() {
       onClick={toggleTheme}
       aria-label={dark ? 'Switch to light mode' : 'Switch to dark mode'}
       className={`grid size-8 place-items-center rounded-full transition ${
-        dark ? 'bg-[#f3d48a] text-[#3d2a0a]' : 'bg-[#1b2433] text-[#dce7f2]'
+        dark ? 'bg-[#1b2433] text-[#dce7f2]' : 'bg-[#f3d48a] text-[#3d2a0a]'
       }`}
     >
-      {dark ? <SunIcon className="size-3.5" /> : <MoonIcon className="size-3.5" />}
+      {dark ? <MoonIcon className="size-3.5" /> : <SunIcon className="size-3.5" />}
     </button>
   );
 }

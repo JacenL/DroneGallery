@@ -6,6 +6,9 @@ export type MediaItem = {
 export const HERO_IMAGE =
   'https://res.cloudinary.com/jaycenl/image/upload/v1747802452/DJI_0121_edit_symozo.jpg';
 
+export const HERO_IMAGE_LIGHT =
+  'https://res.cloudinary.com/jaycenl/image/upload/v1747802514/DJI_0060_hoctlo.jpg';
+
 export const AUTH_BACKDROP =
   'https://res.cloudinary.com/jaycenl/image/upload/v1747802565/DJI_0133_qhhcgw.jpg';
 
